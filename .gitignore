@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# macOS
+.DS_Store
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Java / Maven build output
+java-backend/target/
+*.class
+
+# Logs
+*.log

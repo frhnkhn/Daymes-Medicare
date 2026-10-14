@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daymes Healthcare - Clinical & Logistics Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --card-hover: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-subtle: #f1f5f9;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --success: #10b981;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --warning-text: #92400e;
+            --info: #0ea5e9;
+            --info-bg: #e0f2fe;
+            --info-text: #0369a1;
+            --purple: #8b5cf6;
+            --purple-bg: #f3e8ff;
+            --purple-text: #6b21a8;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --modal-backdrop: rgba(15, 23, 42, 0.5);
+        }
+
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --primary-light: #1e293b;
+            --bg-color: #0b0f19;
+            --card-bg: #131b2e;
+            --card-hover: #1a243b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #232f48;
+            --border-subtle: #192338;
+            --danger: #f87171;
+            --danger-bg: rgba(239, 68, 68, 0.18);
+            --danger-text: #fca5a5;
+            --success: #34d399;
+            --success-bg: rgba(16, 185, 129, 0.18);
+            --success-text: #6ee7b7;
+            --warning: #fbbf24;
+            --warning-bg: rgba(245, 158, 11, 0.18);
+            --warning-text: #fde68a;
+            --info: #38bdf8;
+            --info-bg: rgba(14, 165, 233, 0.18);
+            --info-text: #7dd3fc;
+            --purple: #a78bfa;
+            --purple-bg: rgba(139, 92, 246, 0.18);
+            --purple-text: #d8b4fe;
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+            --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.5);
+            --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.6);
+            --modal-backdrop: rgba(0, 0, 0, 0.75);
+        }
+
+        * { box-sizing: border-box; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+        body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; line-height: 1.5; }
+
+        /* Navbar */
+        .navbar { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; justify-content: space-between; align-items: center; height: 68px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
+        .nav-brand i { color: var(--primary); font-size: 1.5rem; }
+        .nav-brand span.badge-pro { font-size: 0.65rem; font-weight: 700; background: var(--primary-light); color: var(--primary); padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--border); }
+        
+        .nav-links { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; height: 100%; }
+        .nav-links li { height: 100%; display: flex; align-items: center; }
+        .nav-links a { display: flex; align-items: center; gap: 7px; height: 100%; padding: 0 12px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; border-bottom: 2px solid transparent; cursor: pointer; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-links a.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+        .nav-links a i { font-size: 1.15rem; }
+
+        .user-controls { display: flex; align-items: center; gap: 14px; }
+        .theme-toggle-btn { background: var(--border-subtle); border: 1px solid var(--border); color: var(--text-main); border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; }
+        .theme-toggle-btn:hover { background: var(--border); }
+        .user-pill { display: flex; align-items: center; gap: 8px; background: var(--border-subtle); padding: 6px 12px; border-radius: 99px; border: 1px solid var(--border); font-size: 0.85rem; font-weight: 500; }
+        .user-pill .avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+        .btn-logout { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; }
+        .btn-logout:hover { color: var(--danger); background: var(--danger-bg); }
+
+        /* Container & Page Header */
+        .container { max-width: 1300px; margin: 28px auto; padding: 0 24px; }
+        .page-header { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .page-header h2 { font-size: 1.6rem; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.02em; }
+        .page-header p { color: var(--text-muted); margin: 0; font-size: 0.95rem; }
+
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .sys-status-badge { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 500; background: var(--card-bg); padding: 8px 16px; border-radius: 99px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+        .status-dot { width: 9px; height: 9px; border-radius: 50%; }
+        .status-on { background: var(--success); box-shadow: 0 0 0 3px var(--success-bg); }
+        .status-off { background: var(--text-muted); box-shadow: 0 0 0 3px var(--border); }
+
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: .3s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        /* Global Alert Banner */
+        .alert-banner { background-color: var(--warning-bg); border-left: 4px solid var(--warning); color: var(--warning-text); padding: 12px 18px; border-radius: 8px; margin-bottom: 24px; display: none; align-items: center; justify-content: space-between; font-size: 0.92rem; font-weight: 500; box-shadow: var(--shadow-sm); }
+        .alert-banner-left { display: flex; align-items: center; gap: 10px; }
+
+        /* Navigation Views */
+        .view-section { display: none; animation: fadeIn 0.25s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Stat Grid */
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .stat-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+        .stat-card-header i { font-size: 1.35rem; color: var(--primary); }
+        .stat-card .stat-num { font-size: 1.95rem; font-weight: 700; margin: 0; color: var(--text-main); letter-spacing: -0.03em; }
+        .stat-card .stat-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+
+        /* Progress bar */
+        .progress-bar-bg { width: 100%; height: 6px; background: var(--border-subtle); border-radius: 99px; margin-top: 10px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+
+        /* Quick Action Toolbar */
+        .quick-actions-bar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+        .btn-quick { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-main); padding: 9px 16px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow-sm); }
+        .btn-quick:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .btn-quick.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+        .btn-quick.primary:hover { background: var(--primary-hover); }
+
+        /* Layouts */
+        .dashboard-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+        @media (max-width: 960px) { .dashboard-layout { grid-template-columns: 1fr; } }
+
+        .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+        .panel-header h3 { margin: 0; font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        /* Filter bar & Inputs */
+        .filter-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .filter-chip { padding: 6px 14px; border-radius: 99px; font-size: 0.82rem; font-weight: 500; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-muted); cursor: pointer; }
+        .filter-chip:hover { border-color: var(--primary); color: var(--text-main); }
+        .filter-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+
+        .search-box { position: relative; }
+        .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; }
+        .search-input { width: 260px; padding: 8px 12px 8px 36px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.88rem; outline: none; background: var(--card-bg); color: var(--text-main); }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+
+        .select-filter { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.88rem; outline: none; background: var(--card-bg); color: var(--text-main); }
+
+        /* Buttons */
+        .btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; transition: all 0.15s; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--border); }
+        .btn-secondary:hover { background: var(--border-subtle); }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { opacity: 0.9; }
+        .btn-sm { padding: 5px 10px; font-size: 0.8rem; border-radius: 6px; }
+
+        /* Card Grids */
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 18px; }
+        .item-card { border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: var(--card-bg); position: relative; overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; }
+        .item-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .item-name { font-size: 1.12rem; font-weight: 700; margin: 0 0 4px 0; color: var(--text-main); }
+        .item-category { font-size: 0.78rem; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 2px 8px; border-radius: 6px; display: inline-block; }
+
+        .stat-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: var(--text-muted); align-items: center; }
+        .stat-val { color: var(--text-main); font-weight: 600; }
+
+        .card-footer-actions { display: flex; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-subtle); align-items: center; justify-content: space-between; }
+        .btn-group-right { display: flex; gap: 6px; align-items: center; }
+
+        /* Badges */
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+        .badge-success { background: var(--success-bg); color: var(--success-text); }
+        .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
+        .badge-danger { background: var(--danger-bg); color: var(--danger-text); }
+        .badge-info { background: var(--info-bg); color: var(--info-text); }
+        .badge-purple { background: var(--purple-bg); color: var(--purple-text); }
+
+        .expired-banner { background: var(--danger); color: white; text-align: center; font-size: 0.75rem; font-weight: 700; padding: 4px; margin: -18px -18px 12px -18px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .expiring-banner { background: var(--warning); color: #000; text-align: center; font-size: 0.75rem; font-weight: 700; padding: 4px; margin: -18px -18px 12px -18px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .delivery-box { background: var(--info-bg); border: 1px solid var(--info); padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; color: var(--info-text); margin-top: 12px; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-muted); font-weight: 600; background: var(--border-subtle); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.04em; }
+        tr:hover { background: var(--border-subtle); }
+
+        /* Stepper for Order Logistics */
+        .order-pipeline-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; background: var(--card-bg); margin-bottom: 14px; box-shadow: var(--shadow-sm); }
+        .order-pipeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+        .stepper-container { display: flex; justify-content: space-between; position: relative; margin: 20px 0 10px 0; }
+        .stepper-container::before { content: ''; position: absolute; top: 14px; left: 20px; right: 20px; height: 3px; background: var(--border); z-index: 1; }
+        .step-node { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; width: 80px; }
+        .step-circle { width: 30px; height: 30px; border-radius: 50%; background: var(--card-bg); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+        .step-node.completed .step-circle { background: var(--success); border-color: var(--success); color: #fff; }
+        .step-node.active .step-circle { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 0 0 4px var(--primary-light); }
+        .step-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+        .step-node.active .step-label { color: var(--primary); }
+        .step-node.completed .step-label { color: var(--text-main); }
+
+        /* Counter Buttons for Hospital Capacity */
+        .counter-btn-group { display: flex; align-items: center; gap: 6px; }
+        .btn-counter { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: var(--border-subtle); color: var(--text-main); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .btn-counter:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* Modal system */
+        .modal-overlay { position: fixed; inset: 0; background: var(--modal-backdrop); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal-overlay.show { display: flex; animation: modalFade 0.2s ease; }
+        @keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 520px; box-shadow: var(--shadow-lg); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; }
+        .btn-close-modal { background: none; border: none; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; }
+        .btn-close-modal:hover { color: var(--text-main); }
+        .modal-body { padding: 22px 24px; overflow-y: auto; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; background: var(--border-subtle); }
+
+        .form-group { margin-bottom: 16px; }
+        .form-row { display: flex; gap: 12px; }
+        .form-row .form-group { flex: 1; }
+        label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        input[type="text"], input[type="number"], input[type="date"], select, textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: var(--card-bg); color: var(--text-main); outline: none; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--card-bg); border: 1px solid var(--border); padding: 14px 22px; border-radius: 10px; box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; display: flex; align-items: center; gap: 12px; font-size: 0.92rem; font-weight: 600; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { padding: 0 16px; height: auto; flex-direction: column; align-items: flex-start; padding-bottom: 12px; }
+            .nav-links { overflow-x: auto; width: 100%; padding-top: 8px; }
+            .container { padding: 0 16px; margin: 16px auto; }
+            .search-input { width: 100%; }
+        }
+
+        /* APP Project Teacher Walkthrough Styles */
+        .tour-progress-bar { display: flex; gap: 6px; margin-bottom: 20px; }
+        .tour-step-pill { flex: 1; height: 6px; border-radius: 99px; background: var(--border); transition: all 0.3s; }
+        .tour-step-pill.completed { background: var(--success); }
+        .tour-step-pill.active { background: var(--primary); }
+        .tour-card { background: var(--border-subtle); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-bottom: 20px; }
+        .tour-badge { background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-bottom: 10px; }
+        .pulse-highlight { animation: pulseGlow 1.5s infinite; }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="ph ph-heartbeat"></i>
+            <span>Daymes Medicare</span>
+            <span class="badge-pro">Enterprise</span>
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="switchView('dashboard')" id="nav-dashboard" class="active"><i class="ph ph-squares-four"></i> Dashboard</a></li>
+            <li><a onclick="switchView('inventory')" id="nav-inventory"><i class="ph ph-pill"></i> Inventory</a></li>
+            <li><a onclick="switchView('patients')" id="nav-patients"><i class="ph ph-user-list"></i> Patients & Rx</a></li>
+            <li><a onclick="switchView('orders')" id="nav-orders"><i class="ph ph-truck"></i> Orders & Logistics</a></li>
+            <li><a onclick="switchView('hospitals')" id="nav-hospitals"><i class="ph ph-hospital"></i> Facilities</a></li>
+            <li><a onclick="switchView('activity')" id="nav-activity"><i class="ph ph-clock-counter-clockwise"></i> Audit Log</a></li>
+            <li><a onclick="switchView('reports')" id="nav-reports"><i class="ph ph-chart-line-up"></i> Analytics</a></li>
+        </ul>
+        <div class="user-controls">
+            <button class="btn btn-sm" onclick="openTeacherTour()" style="background: linear-gradient(135deg, #2563eb, #7c3aed); color:white; border:none; border-radius:8px; font-weight:600; padding:7px 14px; box-shadow:0 3px 10px rgba(124, 58, 237, 0.35); cursor:pointer; display:flex; align-items:center; gap:6px; transition: transform 0.15s ease;">
+                <i class="ph ph-graduation-cap" style="font-size:1.15rem;"></i> APP Project Guide
+            </button>
+            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleDarkMode()" title="Toggle Dark / Light Mode">
+                <i class="ph ph-moon" id="themeIcon"></i>
+            </button>
+            <div class="user-pill">
+                <div class="avatar">{{ username[:1].upper() if username else 'A' }}</div>
+                <span>{{ username }}</span>
+            </div>
+            <a href="{{ url_for('logout') }}" class="btn-logout" title="Sign Out">
+                <i class="ph ph-sign-out"></i>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Title & Global Actions -->
+        <div class="page-header">
+            <div>
+                <h2 id="view-title">Clinical & Operational Dashboard</h2>
+                <p id="view-subtitle">Live status across Daymes Healthcare regional network.</p>
+            </div>
+            
+            <div class="header-actions">
+                <div class="sys-status-badge">
+                    <div class="status-dot" id="system-status-dot"></div>
+                    <span id="system-status-text">Auto-Reorder System: Syncing...</span>
+                    <label class="switch" style="margin-left:6px;">
+                        <input type="checkbox" id="autoReorderToggle" onchange="toggleSystemSettings()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Critical Notice Alert Banner -->
+        <div class="alert-banner" id="reorderAlert">
+            <div class="alert-banner-left">
+                <i class="ph ph-warning-circle" style="font-size: 1.4rem;"></i>
+                <span id="reorderAlertText"><strong>Urgent Alert:</strong> Critical supply levels or expiring medications require attention.</span>
+            </div>
+            <button class="btn btn-sm btn-secondary" onclick="switchView('inventory'); filterInventory('issues');" style="white-space:nowrap;">
+                Review Items <i class="ph ph-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- VIEW: DASHBOARD                                          -->
+        <!-- ======================================================== -->
+        <div id="view-dashboard" class="view-section active">
+            <!-- Real-Time Top KPI Grid -->
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">Inventory Valuation <i class="ph ph-currency-inr"></i></div>
+                    <p class="stat-num" id="stat-inventory-val">₹0</p>
+                    <div class="stat-sub"><i class="ph ph-package"></i> <span id="stat-total-units">0</span> total physical units</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">Bed Occupancy <i class="ph ph-bed"></i></div>
+                    <p class="stat-num" id="stat-bed-rate">0%</p>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="occupancy-progress" style="width: 0%;"></div></div>
+                    <div class="stat-sub"><span id="stat-beds-ratio">0/0</span> beds utilized</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">Admitted Patients & Rx <i class="ph ph-users-three"></i></div>
+                    <p class="stat-num" id="stat-patients-num">0</p>
+                    <div class="stat-sub"><i class="ph ph-prescription"></i> <span id="stat-presc-count">0</span> active prescriptions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">Attention Required <i class="ph ph-warning-octagon"></i></div>
+                    <p class="stat-num" id="stat-critical-count" style="color:var(--danger);">0</p>
+                    <div class="stat-sub"><span id="stat-expired-count">0</span> expired, <span id="stat-low-count">0</span> low stock</div>
+                </div>
+            </div>
+
+            <!-- Quick Action Shortcuts Bar -->
+            <div class="quick-actions-bar">
+                <button class="btn-quick primary" onclick="openModal('modalAddMedicine')"><i class="ph ph-plus-circle"></i> Add Medicine</button>
+                <button class="btn-quick" onclick="openModal('modalAdmitPatient')"><i class="ph ph-user-plus"></i> Admit Patient</button>
+                <button class="btn-quick" onclick="openModal('modalNewOrder')"><i class="ph ph-shopping-cart"></i> Place Purchase Order</button>
+                <button class="btn-quick" onclick="openModal('modalAddHospital')"><i class="ph ph-hospital"></i> Add Hospital Facility</button>
+                <button class="btn-quick" onclick="openModal('modalAddSupplier')"><i class="ph ph-buildings"></i> Add Supplier</button>
+                <button class="btn-quick" onclick="switchView('reports')"><i class="ph ph-chart-bar"></i> Full Financials</button>
+            </div>
+
+            <!-- 2-Column Dashboard Body -->
+            <div class="dashboard-layout">
+                <div>
+                    <!-- Critical Inventory Watchlist -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="ph ph-shield-warning" style="color:var(--warning);"></i> Clinical Priority Watchlist</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="switchView('inventory')">View All Inventory</button>
+                        </div>
+                        <div id="dashboardWatchlist" class="grid-layout" style="grid-template-columns: 1fr;"></div>
+                    </div>
+
+                    <!-- Hospital Capacity Snapshot -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="ph ph-buildings" style="color:var(--info);"></i> Hospital Facilities Live Status</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="switchView('hospitals')">Manage Facilities</button>
+                        </div>
+                        <div id="dashboardHospitalList" class="grid-layout" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));"></div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Real-time Audit Activity Stream -->
+                <div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="ph ph-pulse" style="color:var(--primary);"></i> Live Activity Feed</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="fetchActivityLogs()"><i class="ph ph-arrows-clockwise"></i></button>
+                        </div>
+                        <div id="dashboardActivityFeed" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- VIEW: INVENTORY MANAGEMENT                               -->
+        <!-- ======================================================== -->
+        <div id="view-inventory" class="view-section">
+            <div class="panel">
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <button class="filter-chip active" onclick="filterInventory('all', this)">All Items</button>
+                        <button class="filter-chip" onclick="filterInventory('low', this)">⚠️ Critically Low (≤3d)</button>
+                        <button class="filter-chip" onclick="filterInventory('expiring', this)">⏳ Expiring Soon</button>
+                        <button class="filter-chip" onclick="filterInventory('expired', this)">⛔ Expired</button>
+                        <button class="filter-chip" onclick="filterInventory('ordered', this)">🚚 In Transit</button>
+                    </div>
+
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <select id="categoryFilter" class="select-filter" onchange="applyFilters()">
+                            <option value="">All Categories</option>
+                        </select>
+                        <div class="search-box">
+                            <i class="ph ph-magnifying-glass"></i>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search medicines or batches...">
+                        </div>
+                        <button class="btn btn-primary" onclick="openModal('modalAddMedicine')">
+                            <i class="ph ph-plus"></i> Add Medicine
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid-layout" id="inventoryList" style="margin-top:16px;"></div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- VIEW: PATIENTS & PRESCRIPTIONS                           -->
+        <!-- ======================================================== -->
+        <div id="view-patients" class="view-section">
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <button class="filter-chip active" id="tabPrescriptions" onclick="switchPatientTab('prescriptions')">
+                        <i class="ph ph-prescription"></i> Active Prescriptions (<span id="countRx">0</span>)
+                    </button>
+                    <button class="filter-chip" id="tabCensus" onclick="switchPatientTab('census')">
+                        <i class="ph ph-users"></i> Patient Census (<span id="countPatients">0</span>)
+                    </button>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-secondary" onclick="openModal('modalNewPrescription')">
+                        <i class="ph ph-plus-circle"></i> Prescribe Medication
+                    </button>
+                    <button class="btn btn-primary" onclick="openModal('modalAdmitPatient')">
+                        <i class="ph ph-user-plus"></i> Admit Patient
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 1: Prescriptions with Administer Dose Action -->
+            <div id="patientTab-prescriptions">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="ph ph-pill"></i> Medication Administration Schedule</h3>
+                        <span style="font-size:0.85rem; color:var(--text-muted);">Administering a dose safely decrements central inventory and updates patient chart.</span>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rx ID</th>
+                                    <th>Patient & Room</th>
+                                    <th>Prescribed Drug</th>
+                                    <th>Dosage & Frequency</th>
+                                    <th>Prescribed By</th>
+                                    <th>Stock Left</th>
+                                    <th>Last Administered</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prescriptionsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Patient Census Directory -->
+            <div id="patientTab-census" style="display:none;">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="ph ph-user-list"></i> Admitted Inpatient Census</h3>
+                        <div class="search-box">
+                            <i class="ph ph-magnifying-glass"></i>
+                            <input type="text" id="searchPatientsInput" class="search-input" placeholder="Search patients or conditions...">
+                        </div>
+                    </div>
+                    <div class="grid-layout" id="patientCardsGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- VIEW: ORDERS & LOGISTICS                                 -->
+        <!-- ======================================================== -->
+        <div id="view-orders" class="view-section">
+            <div class="dashboard-layout">
+                <div>
+                    <!-- Active Purchase Orders Pipeline -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="ph ph-truck"></i> Purchase Order Pipeline & Tracking</h3>
+                            <button class="btn btn-primary btn-sm" onclick="openModal('modalNewOrder')">
+                                <i class="ph ph-plus"></i> New Purchase Order
+                            </button>
+                        </div>
+                        <p style="color:var(--text-muted); font-size:0.88rem; margin-top:-6px;">Advance shipment steps from supplier dispatch to hospital receiving bay.</p>
+                        <div id="activeOrdersPipeline"></div>
+                    </div>
+
+                    <!-- Completed Order Receipts -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="ph ph-check-circle" style="color:var(--success);"></i> Historical Shipments Received</h3>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Tracking #</th>
+                                        <th>Medicine</th>
+                                        <th>Supplier</th>
+                                        <th>Qty</th>
+                                        <th>Total Cost (₹)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="completedOrdersTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Authorized Suppliers Directory -->
+                <div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="ph ph-buildings"></i> Certified Suppliers</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="openModal('modalAddSupplier')">
+                                <i class="ph ph-plus"></i> Add
+                            </button>
+                        </div>
+                        <div id="suppliersContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- VIEW: HOSPITALS & FACILITIES NETWORK                     -->
+        <!-- ======================================================== -->
+        <div id="view-hospitals" class="view-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                        <div class="search-box">
+                            <i class="ph ph-magnifying-glass"></i>
+                            <input type="text" id="searchHospitals" class="search-input" placeholder="Search facilities or locations...">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('modalAddHospital')">
+                        <i class="ph ph-plus"></i> Register New Facility
+                    </button>
+                </div>
+                <div class="grid-layout" id="hospitalsList"></div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- VIEW: AUDIT ACTIVITY LOG                                 -->
+        <!-- ======================================================== -->
+        <div id="view-activity" class="view-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3><i class="ph ph-shield-check"></i> Enterprise Audit & Compliance Log</h3>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Complete chronological record of all clinical, inventory, and system modifications.</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <select id="actionFilter" class="select-filter" onchange="fetchActivityLogs()">
+                            <option value="">All Action Types</option>
+                            <option value="Administer Medication">Administer Medication</option>
+                            <option value="Dispense Medicine">Dispense Medicine</option>
+                            <option value="Add Medicine">Add Medicine</option>
+                            <option value="Manual Purchase Order">Manual Purchase Order</option>
+                            <option value="Auto-Reorder">Auto-Reorder</option>
+                            <option value="Patient Admission">Patient Admission</option>
+                            <option value="New Prescription">New Prescription</option>
+                            <option value="Stock Disposal">Stock Disposal</option>
+                            <option value="Patient Admitted">Bed Allocation (Admitted)</option>
+                            <option value="Patient Discharged">Bed Allocation (Discharged)</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="fetchActivityLogs()">
+                            <i class="ph ph-arrows-clockwise"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User / System</th>
+                                <th>Action Category</th>
+                                <th>Operational Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- VIEW: DYNAMIC ANALYTICS & REPORTS                        -->
+        <!-- ======================================================== -->
+        <div id="view-reports" class="view-section">
+            <!-- Dynamic Real-Time Financial Cards -->
+            <div class="stat-grid" style="margin-bottom: 24px;">
+                <div class="stat-card">
+                    <div class="stat-card-header">Total Inventory Valuation <i class="ph ph-vault"></i></div>
+                    <p class="stat-num" id="report-inventory-val">₹0</p>
+                    <span class="stat-sub" style="color:var(--success);"><i class="ph ph-check-circle"></i> Live audit calculation</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">Monthly Burn Expenditure <i class="ph ph-fire"></i></div>
+                    <p class="stat-num" id="report-burn-rate">₹0</p>
+                    <span class="stat-sub">Based on actual daily clinical consumption</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">Value at Risk (Expiring &lt;30d) <i class="ph ph-warning-circle"></i></div>
+                    <p class="stat-num" id="report-val-at-risk" style="color:var(--danger);">₹0</p>
+                    <span class="stat-sub">Expired or expiring within 30 days</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">Network Bed Utilization <i class="ph ph-chart-pie-slice"></i></div>
+                    <p class="stat-num" id="report-bed-rate">0%</p>
+                    <span class="stat-sub" id="report-bed-counts">0 occupied / 0 total beds</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Chart.js Analytics -->
+            <div class="dashboard-layout" style="grid-template-columns: 1fr 1fr; margin-bottom:24px;">
+                <div class="panel" style="margin-bottom:0;">
+                    <div class="panel-header"><h3><i class="ph ph-chart-bar"></i> Monthly Supply Consumption Trend</h3></div>
+                    <div style="height: 260px;"><canvas id="usageTrendChart"></canvas></div>
+                </div>
+                <div class="panel" style="margin-bottom:0;">
+                    <div class="panel-header"><h3><i class="ph ph-chart-pie"></i> Inventory Valuation by Category</h3></div>
+                    <div style="height: 260px;"><canvas id="categoryDistributionChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Inventory Report Table & CSV Export -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3><i class="ph ph-table"></i> Complete Inventory & Financial Audit Ledger</h3>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Download complete stock registers for accounting and compliance.</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="exportCSV()">
+                        <i class="ph ph-download-simple"></i> Export CSV
+                    </button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Medicine Formulation</th>
+                                <th>Category</th>
+                                <th>Batch #</th>
+                                <th>Supplier</th>
+                                <th>Stock</th>
+                                <th>Daily Usage</th>
+                                <th>Unit Cost (₹)</th>
+                                <th>Total Value (₹)</th>
+                                <th>Expiration</th>
+                                <th>Health Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODALS CONTAINER                                         -->
+    <!-- ======================================================== -->
+
+    <!-- Modal: APP Project Presentation Guide -->
+    <div class="modal-overlay" id="modalTeacherTour">
+        <div class="modal-content" style="max-width: 680px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.08));">
+                <div>
+                    <h3 style="display:flex; align-items:center; gap:8px;">
+                        <i class="ph ph-graduation-cap" style="color:var(--primary);"></i>
+                        APP Project Presentation Walkthrough
+                    </h3>
+                    <span style="font-size:0.8rem; color:var(--text-muted);">Step-by-step interactive script for presenting Daymes Medicare to your instructor</span>
+                </div>
+                <button class="btn-close-modal" onclick="closeModal('modalTeacherTour')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Tour Progress Pills -->
+                <div class="tour-progress-bar" id="tourProgressPills"></div>
+
+                <!-- Dynamic Tour Step Content -->
+                <div class="tour-card" id="tourContentCard"></div>
+            </div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn btn-secondary" id="btnTourPrev" onclick="prevTourStep()">
+                    <i class="ph ph-arrow-left"></i> Previous
+                </button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-secondary" id="btnTourAction" onclick="runTourAction()">
+                        <i class="ph ph-play"></i> Jump & Demonstrate
+                    </button>
+                    <button class="btn btn-primary" id="btnTourNext" onclick="nextTourStep()">
+                        Next Step <i class="ph ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add Medicine -->
+    <div class="modal-overlay" id="modalAddMedicine">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Medicine Formulation</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalAddMedicine')">&times;</button>
+            </div>
+            <form id="formAddMedicine">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Medicine Name *</label>
+                        <input type="text" id="addMedName" placeholder="e.g. Ciprofloxacin" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <input type="text" id="addMedCategory" placeholder="e.g. Antibiotic" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Batch Number</label>
+                            <input type="text" id="addMedBatch" placeholder="e.g. BAT-2610">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Initial Physical Stock *</label>
+                            <input type="number" id="addMedStock" min="1" placeholder="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Est. Daily Clinical Usage *</label>
+                            <input type="number" id="addMedUsage" min="1" placeholder="2" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Unit Cost / Price (₹) *</label>
+                            <input type="number" id="addMedPrice" step="0.01" min="0.1" placeholder="15.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Expiration Date *</label>
+                            <input type="date" id="addMedExp" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Supplier / Vendor *</label>
+                        <select id="addMedSupplier" required></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddMedicine')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save to Central Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Medicine -->
+    <div class="modal-overlay" id="modalEditMedicine">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Medicine Details</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalEditMedicine')">&times;</button>
+            </div>
+            <form id="formEditMedicine">
+                <input type="hidden" id="editMedId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Medicine Name</label>
+                        <input type="text" id="editMedName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <input type="text" id="editMedCategory" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Batch Number</label>
+                            <input type="text" id="editMedBatch">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Physical Stock Quantity</label>
+                            <input type="number" id="editMedStock" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Daily Usage Rate</label>
+                            <input type="number" id="editMedUsage" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Unit Cost (₹)</label>
+                            <input type="number" id="editMedPrice" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Expiration Date</label>
+                            <input type="date" id="editMedExp" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Supplier</label>
+                        <select id="editMedSupplier" required></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalEditMedicine')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Medicine</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Manual Reorder -->
+    <div class="modal-overlay" id="modalReorder">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Purchase Order for Medication</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalReorder')">&times;</button>
+            </div>
+            <form id="formReorder">
+                <input type="hidden" id="reorderMedId">
+                <div class="modal-body">
+                    <p style="color:var(--text-muted); font-size:0.9rem;" id="reorderMedNameDesc"></p>
+                    <div class="form-group">
+                        <label>Supplier Vendor</label>
+                        <select id="reorderSupplier" required></select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Order Quantity (units)</label>
+                            <input type="number" id="reorderQty" min="10" value="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Lead Time (Days)</label>
+                            <input type="number" id="reorderDays" min="1" value="3" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalReorder')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Purchase Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Dispose Expired Stock -->
+    <div class="modal-overlay" id="modalDispose">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Safely Dispose / Write Off Stock</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalDispose')">&times;</button>
+            </div>
+            <form id="formDispose">
+                <input type="hidden" id="disposeMedId">
+                <div class="modal-body">
+                    <p style="color:var(--danger); font-size:0.9rem;" id="disposeMedNameDesc"></p>
+                    <div class="form-group">
+                        <label>Units to Dispose</label>
+                        <input type="number" id="disposeQty" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Disposal Protocol Reason</label>
+                        <select id="disposeReason">
+                            <option value="Expired Past Shelf-Life">Expired Past Shelf-Life</option>
+                            <option value="Packaging Damaged / Broken Seal">Packaging Damaged / Broken Seal</option>
+                            <option value="Manufacturer Recall / Quarantine">Manufacturer Recall / Quarantine</option>
+                            <option value="Cold Chain Failure">Cold Chain Failure</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalDispose')">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm Stock Disposal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Admit Patient -->
+    <div class="modal-overlay" id="modalAdmitPatient">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Admit Inpatient to Facility</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalAdmitPatient')">&times;</button>
+            </div>
+            <form id="formAdmitPatient">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Full Patient Name *</label>
+                        <input type="text" id="admitName" placeholder="e.g. Olivia Vance" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Age *</label>
+                            <input type="number" id="admitAge" min="1" max="120" placeholder="45" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender *</label>
+                            <select id="admitGender">
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Hospital Facility *</label>
+                            <select id="admitHospital" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Room & Bed Designation *</label>
+                            <input type="text" id="admitRoom" placeholder="e.g. Ward 3 - Bed 12" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Diagnosis / Clinical Condition *</label>
+                        <input type="text" id="admitCondition" placeholder="e.g. Acute Bronchitis" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalAdmitPatient')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Admit to Census</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: New Prescription -->
+    <div class="modal-overlay" id="modalNewPrescription">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Prescribe Medication to Patient</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalNewPrescription')">&times;</button>
+            </div>
+            <form id="formNewPrescription">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Select Admitted Patient *</label>
+                        <select id="rxPatientId" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Medication formulation *</label>
+                        <select id="rxMedicineId" required></select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Dosage (e.g. 500mg tablet) *</label>
+                            <input type="text" id="rxDosage" placeholder="500mg tablet" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Frequency (e.g. 2x Daily) *</label>
+                            <input type="text" id="rxFrequency" placeholder="Twice daily after meals" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Attending Prescribing Physician *</label>
+                        <input type="text" id="rxDoctor" placeholder="Dr. Robert Hayes" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalNewPrescription')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Issue Prescription</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: New Purchase Order -->
+    <div class="modal-overlay" id="modalNewOrder">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Supplier Purchase Order</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalNewOrder')">&times;</button>
+            </div>
+            <form id="formNewOrder">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Select Medicine to Procure *</label>
+                        <select id="poMedicineId" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Supplier Vendor *</label>
+                        <select id="poSupplierName" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity (units) *</label>
+                        <input type="number" id="poQuantity" min="10" value="100" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalNewOrder')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Dispatch Purchase Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Supplier -->
+    <div class="modal-overlay" id="modalAddSupplier">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Register Authorized Supplier</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalAddSupplier')">&times;</button>
+            </div>
+            <form id="formAddSupplier">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Supplier Enterprise Name *</label>
+                        <input type="text" id="supName" placeholder="e.g. BioMed Logistics Global" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Key Contact Representative</label>
+                            <input type="text" id="supContact" placeholder="Elena Rostova">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="text" id="supPhone" placeholder="(555) 012-3456" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="text" id="supEmail" placeholder="orders@biomed.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Avg Delivery Lead Time (Days)</label>
+                            <input type="number" id="supLeadTime" min="1" value="3">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddSupplier')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Register Partner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Hospital -->
+    <div class="modal-overlay" id="modalAddHospital">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Register Hospital Facility</h3>
+                <button class="btn-close-modal" onclick="closeModal('modalAddHospital')">&times;</button>
+            </div>
+            <form id="formAddHospital">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Facility Name *</label>
+                        <input type="text" id="hospName" placeholder="e.g. Metro West Trauma Center" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Location / City District *</label>
+                        <input type="text" id="hospLocation" placeholder="e.g. Westside Metropolitan" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Total Bed Capacity *</label>
+                            <input type="number" id="hospTotalBeds" min="5" value="60" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Currently Available Beds *</label>
+                            <input type="number" id="hospAvailBeds" min="0" value="45" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Active Doctors on Duty</label>
+                            <input type="number" id="hospDoctors" min="1" value="12" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Dispatch / Emergency Phone</label>
+                            <input type="text" id="hospPhone" placeholder="(555) 999-0000" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddHospital')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Facility</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Popup -->
+    <div class="toast" id="toast">
+        <i class="ph ph-check-circle" id="toast-icon" style="font-size:1.4rem;"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- JavaScript Application Core -->
+    <script>
+        const API_MEDS = '/api/medicines';
+        const API_HOSPITALS = '/api/hospitals';
+        const API_SUPPLIERS = '/api/suppliers';
+        const API_ORDERS = '/api/orders';
+        const API_PATIENTS = '/api/patients';
+        const API_PRESCRIPTIONS = '/api/prescriptions';
+        const API_ACTIVITY = '/api/activity';
+        const API_SETTINGS = '/api/settings';
+        const API_ANALYTICS = '/api/analytics';
+
+        let allMedicines = [];
+        let allHospitals = [];
+        let allSuppliers = [];
+        let allOrders = [];
+        let allPatients = [];
+        let allPrescriptions = [];
+        let allActivity = [];
+        let analyticsData = {};
+        let systemSettings = { auto_reorder_enabled: true };
+
+        let currentInventoryFilter = 'all';
+        let chartUsageTrend = null;
+        let chartCategoryDist = null;
+
+        const viewTitles = {
+            'dashboard': { title: 'Clinical & Operational Dashboard', sub: 'Live status across Daymes Healthcare regional network.' },
+            'inventory': { title: 'Pharmaceutical Inventory Management', sub: 'Track stock balances, unit valuations, expiration dates, and batch recalls.' },
+            'patients': { title: 'Inpatient Clinical Operations & Prescriptions', sub: 'Administer medication orders, manage inpatient beds, and track active regimens.' },
+            'orders': { title: 'Supply Chain & Purchase Order Logistics', sub: 'Multi-stage shipment lifecycle and verified medical supplier directory.' },
+            'hospitals': { title: 'Regional Hospital & Clinic Network', sub: 'Real-time bed occupancy, emergency surge capacity, and doctor rosters.' },
+            'activity': { title: 'Enterprise Audit & Compliance Ledger', sub: 'Chronological traceability of all clinical prescriptions, orders, and adjustments.' },
+            'reports': { title: 'Dynamic Financial & Consumption Analytics', sub: 'Calculated monthly burn rates, capital at risk, and detailed audit exports.' }
+        };
+
+        // Theme Toggle Logic
+        function initTheme() {
+            const saved = localStorage.getItem('daymes_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            updateThemeIcon(saved);
+        }
+
+        function toggleDarkMode() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('daymes_theme', next);
+            updateThemeIcon(next);
+            if (chartUsageTrend) renderReportCharts(analyticsData);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.className = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+        }
+
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+            
+            const targetSection = document.getElementById('view-' + viewName);
+            const targetNav = document.getElementById('nav-' + viewName);
+            if (targetSection) targetSection.classList.add('active');
+            if (targetNav) targetNav.classList.add('active');
+            
+            if (viewTitles[viewName]) {
+                document.getElementById('view-title').textContent = viewTitles[viewName].title;
+                document.getElementById('view-subtitle').textContent = viewTitles[viewName].sub;
+            }
+            
+            if (viewName === 'activity') fetchActivityLogs();
+            if (viewName === 'reports') fetchAnalytics();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = message;
+            const icon = document.getElementById('toast-icon');
+            
+            if (type === 'warning') {
+                icon.className = 'ph ph-warning-circle';
+                icon.style.color = 'var(--warning)';
+            } else if (type === 'danger') {
+                icon.className = 'ph ph-x-circle';
+                icon.style.color = 'var(--danger)';
+            } else {
+                icon.className = 'ph ph-check-circle';
+                icon.style.color = 'var(--success)';
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3200);
+        }
+
+        // Modal Utilities
+        function openModal(modalId) {
+            populateModalDropdowns();
+            const el = document.getElementById(modalId);
+            if (el) el.classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) el.classList.remove('show');
+        }
+
+        // Close modal when clicking outside backdrop
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        function populateModalDropdowns() {
+            // Suppliers dropdowns
+            const supOptions = allSuppliers.map(s => `<option value="${s.name}">${s.name} (${s.leadTimeDays}d lead)</option>`).join('');
+            ['addMedSupplier', 'editMedSupplier', 'reorderSupplier', 'poSupplierName'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && supOptions) el.innerHTML = supOptions;
+            });
+
+            // Hospitals dropdowns
+            const hospOptions = allHospitals.map(h => `<option value="${h.id}">${h.name} (${h.availableBeds} beds free)</option>`).join('');
+            const admitHosp = document.getElementById('admitHospital');
+            if (admitHosp && hospOptions) admitHosp.innerHTML = hospOptions;
+
+            // Medicines dropdowns
+            const medOptions = allMedicines.map(m => `<option value="${m.id}">${m.name} (${m.stockQuantity} in stock)</option>`).join('');
+            ['rxMedicineId', 'poMedicineId'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && medOptions) el.innerHTML = medOptions;
+            });
+
+            // Patients dropdown for Rx
+            const patientOptions = allPatients.map(p => `<option value="${p.id}">${p.fullName} (${p.roomBed})</option>`).join('');
+            const rxPatient = document.getElementById('rxPatientId');
+            if (rxPatient && patientOptions) rxPatient.innerHTML = patientOptions;
+
+            // Categories filter dropdown
+            const categories = [...new Set(allMedicines.map(m => m.category || 'General'))];
+            const catSelect = document.getElementById('categoryFilter');
+            if (catSelect) {
+                const currentVal = catSelect.value;
+                catSelect.innerHTML = '<option value="">All Categories</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
+                catSelect.value = currentVal;
+            }
+        }
+
+        // Data Fetching
+        async function fetchAllData() {
+            try {
+                const [resMeds, resHosp, resSup, resOrd, resPat, resPr, resSet, resAn] = await Promise.all([
+                    fetch(API_MEDS), fetch(API_HOSPITALS), fetch(API_SUPPLIERS), fetch(API_ORDERS),
+                    fetch(API_PATIENTS), fetch(API_PRESCRIPTIONS), fetch(API_SETTINGS), fetch(API_ANALYTICS)
+                ]);
+
+                allMedicines = await resMeds.json();
+                allHospitals = await resHosp.json();
+                allSuppliers = await resSup.json();
+                allOrders = await resOrd.json();
+                allPatients = await resPat.json();
+                allPrescriptions = await resPr.json();
+                systemSettings = await resSet.json();
+                analyticsData = await resAn.json();
+
+                updateSettingsUI();
+                populateModalDropdowns();
+                renderDashboard();
+                applyFilters();
+                renderPatientsAndPrescriptions();
+                renderOrdersView();
+                renderHospitalsView();
+                renderReports(allMedicines);
+                renderReportCharts(analyticsData);
+                checkGlobalAlerts();
+            } catch (err) {
+                console.error("Error loading Medicare data:", err);
+            }
+        }
+
+        async function fetchAnalytics() {
+            try {
+                const res = await fetch(API_ANALYTICS);
+                analyticsData = await res.json();
+                renderReports(allMedicines);
+                renderReportCharts(analyticsData);
+            } catch (err) { console.error(err); }
+        }
+
+        async function toggleSystemSettings() {
+            try {
+                const res = await fetch(API_SETTINGS + '/toggle_reorder', { method: 'POST' });
+                systemSettings = await res.json();
+                updateSettingsUI();
+                showToast(`Auto-Reorder Engine is now ${systemSettings.auto_reorder_enabled ? 'ACTIVATED' : 'PAUSED'}.`);
+                fetchActivityLogs();
+            } catch (err) { console.error(err); }
+        }
+
+        function updateSettingsUI() {
+            const isEnabled = systemSettings.auto_reorder_enabled;
+            const toggle = document.getElementById('autoReorderToggle');
+            if (toggle) toggle.checked = isEnabled;
+            document.getElementById('system-status-text').textContent = isEnabled ? 'Auto-Reorder: ON' : 'Auto-Reorder: OFF';
+            document.getElementById('system-status-dot').className = isEnabled ? 'status-dot status-on' : 'status-dot status-off';
+        }
+
+        async function fetchActivityLogs() {
+            try {
+                const action = document.getElementById('actionFilter')?.value || '';
+                const url = action ? `${API_ACTIVITY}?action=${encodeURIComponent(action)}` : API_ACTIVITY;
+                const res = await fetch(url);
+                allActivity = await res.json();
+                renderActivity(allActivity);
+            } catch (err) { console.error(err); }
+        }
+
+        function checkGlobalAlerts() {
+            const criticallyLow = allMedicines.filter(m => (m.dailyUsage > 0 && Math.floor(m.stockQuantity / m.dailyUsage) <= 3));
+            const expired = allMedicines.filter(m => getExpStatus(m.expirationDate).type === 'expired');
+            const alertBanner = document.getElementById('reorderAlert');
+            const textEl = document.getElementById('reorderAlertText');
+            
+            if (criticallyLow.length > 0 || expired.length > 0) {
+                textEl.innerHTML = `<strong>Attention Required:</strong> ${criticallyLow.length} medication(s) low on stock, ${expired.length} expired product(s) flagged for quarantine.`;
+                alertBanner.style.display = 'flex';
+            } else {
+                alertBanner.style.display = 'none';
+            }
+        }
+
+        function getExpStatus(expStr) {
+            try {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const exp = new Date(expStr);
+                const diffDays = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+                if (diffDays < 0) return { type: 'expired', msg: 'Expired', days: diffDays };
+                if (diffDays <= 30) return { type: 'expiring', msg: `Expires in ${diffDays}d`, days: diffDays };
+                return { type: 'good', msg: expStr, days: diffDays };
+            } catch (e) {
+                return { type: 'good', msg: expStr, days: 999 };
+            }
+        }
+
+        // ==========================================
+        // RENDER: DASHBOARD
+        // ==========================================
+        function renderDashboard() {
+            const an = analyticsData;
+            document.getElementById('stat-inventory-val').textContent = `₹${(an.total_inventory_value || 0).toLocaleString()}`;
+            document.getElementById('stat-total-units').textContent = (an.total_inventory_items || 0).toLocaleString();
+            
+            const occRate = an.bed_occupancy_rate || 0;
+            document.getElementById('stat-bed-rate').textContent = `${occRate}%`;
+            document.getElementById('occupancy-progress').style.width = `${Math.min(100, occRate)}%`;
+            document.getElementById('stat-beds-ratio').textContent = `${an.total_occupied_beds || 0}/${an.total_network_beds || 0}`;
+            
+            document.getElementById('stat-patients-num').textContent = an.patient_count || 0;
+            document.getElementById('stat-presc-count').textContent = an.active_prescriptions || 0;
+            
+            const totalCritical = (an.critically_low_count || 0) + (an.expired_count || 0);
+            document.getElementById('stat-critical-count').textContent = totalCritical;
+            document.getElementById('stat-expired-count').textContent = an.expired_count || 0;
+            document.getElementById('stat-low-count').textContent = an.critically_low_count || 0;
+
+            // Watchlist (Low stock & Expired items)
+            const watchlist = document.getElementById('dashboardWatchlist');
+            const urgentMeds = allMedicines.filter(m => {
+                const rem = m.dailyUsage > 0 ? Math.floor(m.stockQuantity / m.dailyUsage) : 999;
+                return rem <= 3 || getExpStatus(m.expirationDate).type === 'expired';
+            });
+
+            if (urgentMeds.length === 0) {
+                watchlist.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem; padding:16px 0;">All inventory stocks are within safe clinical thresholds.</div>';
+            } else {
+                watchlist.innerHTML = urgentMeds.slice(0, 4).map(m => {
+                    const remDays = m.dailyUsage > 0 ? Math.floor(m.stockQuantity / m.dailyUsage) : 0;
+                    const exp = getExpStatus(m.expirationDate);
+                    return `
+                        <div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: var(--border-subtle);">
+                            <div>
+                                <strong style="font-size:0.95rem;">${m.name}</strong> <span class="badge ${exp.type === 'expired' ? 'badge-danger' : 'badge-warning'}">${exp.type === 'expired' ? 'Expired' : 'Low: ' + remDays + 'd left'}</span>
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:3px;">Stock: ${m.stockQuantity} units | Batch: ${m.batchNumber || 'N/A'} | Supplier: ${m.supplier}</div>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                ${exp.type === 'expired' ? 
+                                    `<button class="btn btn-sm btn-danger" onclick="openDisposeModal(${m.id})">Dispose</button>` : 
+                                    `<button class="btn btn-sm btn-primary" onclick="openReorderModal(${m.id})">Reorder</button>`}
+                            </div>
+                        </div>`;
+                }).join('');
+            }
+
+            // Dashboard Facility Snapshot
+            const dashHosp = document.getElementById('dashboardHospitalList');
+            dashHosp.innerHTML = allHospitals.map(h => {
+                const occ = h.totalBeds > 0 ? Math.round(((h.totalBeds - h.availableBeds) / h.totalBeds) * 100) : 0;
+                let statusBadge = 'badge-success';
+                if (h.status === 'Critical') statusBadge = 'badge-danger';
+                else if (h.status === 'Busy') statusBadge = 'badge-warning';
+
+                return `
+                    <div style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--card-bg);">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                            <strong style="font-size:0.92rem;">${h.name}</strong>
+                            <span class="badge ${statusBadge}">${h.status}</span>
+                        </div>
+                        <div style="font-size:0.82rem; color:var(--text-muted);">${h.location}</div>
+                        <div style="font-size:0.85rem; font-weight:600; margin-top:8px;">${h.availableBeds} / ${h.totalBeds} Beds Free (${occ}% occupied)</div>
+                        <div class="progress-bar-bg" style="margin-top:4px;"><div class="progress-bar-fill" style="width:${occ}%;"></div></div>
+                    </div>`;
+            }).join('');
+
+            // Dashboard Activity Feed
+            const dashFeed = document.getElementById('dashboardActivityFeed');
+            const recent = allActivity.slice(0, 6);
+            if (!recent.length) {
+                dashFeed.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">No recent events recorded.</div>';
+            } else {
+                dashFeed.innerHTML = recent.map(act => `
+                    <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
+                            <span style="font-weight:600; color:var(--text-main);">${act.username || act.user}</span>
+                            <span style="color:var(--text-muted); font-size:0.75rem;">${act.timestamp}</span>
+                        </div>
+                        <div style="font-size:0.85rem; margin-top:2px;">
+                            <span class="badge badge-info" style="font-size:0.7rem; margin-right:4px;">${act.action}</span>
+                            ${act.details}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ==========================================
+        // RENDER: INVENTORY
+        // ==========================================
+        function filterInventory(filterKey, btnEl) {
+            currentInventoryFilter = filterKey;
+            if (btnEl) {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                btnEl.classList.add('active');
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+            const category = document.getElementById('categoryFilter')?.value || '';
+
+            let filtered = allMedicines.filter(m => {
+                const matchSearch = m.name.toLowerCase().includes(search) || 
+                                    (m.batchNumber && m.batchNumber.toLowerCase().includes(search)) || 
+                                    (m.supplier && m.supplier.toLowerCase().includes(search));
+                const matchCat = !category || m.category === category;
+                return matchSearch && matchCat;
+            });
+
+            if (currentInventoryFilter === 'low') {
+                filtered = filtered.filter(m => m.dailyUsage > 0 && Math.floor(m.stockQuantity / m.dailyUsage) <= 3);
+            } else if (currentInventoryFilter === 'expiring') {
+                filtered = filtered.filter(m => getExpStatus(m.expirationDate).type === 'expiring');
+            } else if (currentInventoryFilter === 'expired') {
+                filtered = filtered.filter(m => getExpStatus(m.expirationDate).type === 'expired');
+            } else if (currentInventoryFilter === 'ordered') {
+                filtered = filtered.filter(m => m.orderStatus === 'ordered');
+            }
+
+            renderInventoryCards(filtered);
+        }
+
+        function renderInventoryCards(medicines) {
+            const list = document.getElementById('inventoryList');
+            if (!medicines.length) {
+                list.innerHTML = '<div style="grid-column:1/-1; padding:40px; text-align:center; color:var(--text-muted);">No medicines match your current filters.</div>';
+                return;
+            }
+
+            list.innerHTML = medicines.map(med => {
+                const remDays = med.dailyUsage > 0 ? Math.floor(med.stockQuantity / med.dailyUsage) : 0;
+                const exp = getExpStatus(med.expirationDate);
+                const unitPrice = med.unitPrice || 15.0;
+                const totalValue = (med.stockQuantity * unitPrice).toFixed(2);
+
+                let headerBanner = '';
+                if (exp.type === 'expired') headerBanner = `<div class="expired-banner"><i class="ph ph-warning-octagon"></i> Expired on ${med.expirationDate}</div>`;
+                else if (exp.type === 'expiring') headerBanner = `<div class="expiring-banner"><i class="ph ph-warning"></i> Expiring Soon (${exp.msg})</div>`;
+
+                let statusBadge = '<span class="badge badge-success">Optimal Stock</span>';
+                if (med.orderStatus === 'ordered') statusBadge = '<span class="badge badge-info">Shipment Pending</span>';
+                else if (remDays <= 3) statusBadge = '<span class="badge badge-danger">Critically Low</span>';
+
+                let orderBox = '';
+                if (med.orderStatus === 'ordered') {
+                    orderBox = `<div class="delivery-box">
+                        <i class="ph ph-truck" style="font-size:1.2rem;"></i>
+                        <div><strong>Order Active (${med.supplier})</strong><br>Est. Arrival: ${med.expectedDelivery || 'In transit'}</div>
+                    </div>`;
+                }
+
+                return `
+                    <div class="item-card">
+                        <div>
+                            ${headerBanner}
+                            <div class="card-top">
+                                <div>
+                                    <h3 class="item-name">${med.name}</h3>
+                                    <span class="item-category">${med.category || 'General'}</span>
+                                </div>
+                                <button class="btn-sm btn-secondary" onclick="openEditModal(${med.id})" title="Edit Medicine"><i class="ph ph-pencil-simple"></i></button>
+                            </div>
+
+                            <div class="stat-row"><span>Batch / Lot #</span><span class="stat-val">${med.batchNumber || 'BAT-1001'}</span></div>
+                            <div class="stat-row"><span>Physical Stock</span><span class="stat-val">${med.stockQuantity} units</span></div>
+                            <div class="stat-row"><span>Daily Consumption</span><span class="stat-val">${med.dailyUsage} units/day</span></div>
+                            <div class="stat-row"><span>Estimated Days Left</span><span class="stat-val">${remDays} days</span></div>
+                            <div class="stat-row"><span>Unit Cost / Total Value</span><span class="stat-val">₹${unitPrice.toFixed(2)} (₹${totalValue})</span></div>
+                            <div class="stat-row"><span>Expiration</span><span class="stat-val ${exp.type !== 'good' ? 'badge badge-danger' : ''}">${exp.msg}</span></div>
+                            <div style="margin-top:10px;">${statusBadge}</div>
+                            ${orderBox}
+                        </div>
+
+                        <div class="card-footer-actions">
+                            <button class="btn btn-sm btn-secondary" onclick="dispenseMed(${med.id}, '${med.name}')" title="Dispense 1 unit to ward">
+                                <i class="ph ph-minus-circle"></i> Dispense 1
+                            </button>
+                            <div class="btn-group-right">
+                                <button class="btn btn-sm btn-primary" onclick="openReorderModal(${med.id})">
+                                    <i class="ph ph-shopping-cart"></i> Reorder
+                                </button>
+                                ${exp.type === 'expired' ? 
+                                    `<button class="btn btn-sm btn-danger" onclick="openDisposeModal(${med.id})" title="Write-off Expired"><i class="ph ph-trash"></i></button>` : 
+                                    `<button class="btn btn-sm btn-secondary" onclick="deleteMed(${med.id})" title="Delete"><i class="ph ph-trash"></i></button>`
+                                }
+                            </div>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        // ==========================================
+        // RENDER: PATIENTS & PRESCRIPTIONS
+        // ==========================================
+        function switchPatientTab(tabName) {
+            document.getElementById('tabPrescriptions').classList.toggle('active', tabName === 'prescriptions');
+            document.getElementById('tabCensus').classList.toggle('active', tabName === 'census');
+            document.getElementById('patientTab-prescriptions').style.display = tabName === 'prescriptions' ? 'block' : 'none';
+            document.getElementById('patientTab-census').style.display = tabName === 'census' ? 'block' : 'none';
+        }
+
+        function renderPatientsAndPrescriptions() {
+            document.getElementById('countRx').textContent = allPrescriptions.length;
+            document.getElementById('countPatients').textContent = allPatients.length;
+
+            // Render Prescriptions Table
+            const tbodyRx = document.getElementById('prescriptionsTableBody');
+            if (!allPrescriptions.length) {
+                tbodyRx.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No active patient prescriptions found.</td></tr>';
+            } else {
+                tbodyRx.innerHTML = allPrescriptions.map(pr => {
+                    const statusBadge = pr.status === 'Active' ? 'badge-success' : 'badge-warning';
+                    const lastAdmin = pr.lastAdministered || 'Pending First Dose';
+                    const isOutOfStock = pr.medicineStock <= 0;
+
+                    return `
+                        <tr>
+                            <td>#${pr.id}</td>
+                            <td>
+                                <strong>${pr.patientName}</strong><br>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">${pr.roomBed}</span>
+                            </td>
+                            <td>
+                                <strong>${pr.medicineName}</strong><br>
+                                <span style="font-size:0.75rem; color:var(--primary);">${pr.medicineCategory || 'General'}</span>
+                            </td>
+                            <td>
+                                <span>${pr.dosage}</span><br>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">${pr.frequency}</span>
+                            </td>
+                            <td>${pr.prescribedBy}</td>
+                            <td>
+                                <span class="badge ${isOutOfStock ? 'badge-danger' : 'badge-info'}">${pr.medicineStock} units</span>
+                            </td>
+                            <td style="font-size:0.8rem; color:var(--text-muted);">${lastAdmin}</td>
+                            <td>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="btn btn-sm btn-primary" onclick="administerDose(${pr.id}, '${pr.patientName}')" ${isOutOfStock ? 'disabled title="Medicine Out of Stock"' : ''}>
+                                        <i class="ph ph-check-circle"></i> Administer
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" onclick="toggleRx(${pr.id})">
+                                        <i class="ph ph-pause"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>`;
+                }).join('');
+            }
+
+            // Render Patients Census Cards
+            const gridPatients = document.getElementById('patientCardsGrid');
+            if (!allPatients.length) {
+                gridPatients.innerHTML = '<div style="grid-column:1/-1; padding:30px; text-align:center; color:var(--text-muted);">No inpatients currently admitted.</div>';
+            } else {
+                gridPatients.innerHTML = allPatients.map(p => {
+                    return `
+                        <div class="item-card">
+                            <div>
+                                <div class="card-top">
+                                    <div>
+                                        <h3 class="item-name">${p.fullName}</h3>
+                                        <span class="badge badge-purple">${p.age}yo ${p.gender}</span>
+                                    </div>
+                                    <span class="badge badge-success">${p.status || 'Admitted'}</span>
+                                </div>
+                                <div class="stat-row"><span>Room & Bed</span><span class="stat-val">${p.roomBed}</span></div>
+                                <div class="stat-row"><span>Facility</span><span class="stat-val">${p.hospitalName || 'Main Hospital'}</span></div>
+                                <div class="stat-row"><span>Clinical Diagnosis</span><span class="stat-val">${p.condition}</span></div>
+                                <div class="stat-row"><span>Active Regimens</span><span class="stat-val">${p.activePrescriptions || 0} Rx</span></div>
+                            </div>
+                            <div class="card-footer-actions">
+                                <button class="btn btn-sm btn-secondary" onclick="openModal('modalNewPrescription'); document.getElementById('rxPatientId').value = ${p.id};">
+                                    <i class="ph ph-plus"></i> Prescribe Med
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="dischargePatient(${p.id}, '${p.fullName}')">
+                                    Discharge
+                                </button>
+                            </div>
+                        </div>`;
+                }).join('');
+            }
+        }
+
+        // ==========================================
+        // RENDER: ORDERS & LOGISTICS
+        // ==========================================
+        function renderOrdersView() {
+            const pipelineContainer = document.getElementById('activeOrdersPipeline');
+            const activeOrders = allOrders.filter(o => o.status !== 'Delivered');
+
+            if (!activeOrders.length) {
+                pipelineContainer.innerHTML = '<div style="padding:30px; text-align:center; color:var(--text-muted);">No active purchase orders currently in transit.</div>';
+            } else {
+                pipelineContainer.innerHTML = activeOrders.map(order => {
+                    const statuses = ['Ordered', 'In Transit', 'Out for Delivery', 'Delivered'];
+                    const currentIdx = statuses.indexOf(order.status);
+
+                    const stepperHTML = statuses.map((st, i) => {
+                        let stateClass = '';
+                        if (i < currentIdx) stateClass = 'completed';
+                        else if (i === currentIdx) stateClass = 'active';
+                        return `
+                            <div class="step-node ${stateClass}">
+                                <div class="step-circle">${i < currentIdx ? '<i class="ph ph-check"></i>' : (i + 1)}</div>
+                                <span class="step-label">${st}</span>
+                            </div>`;
+                    }).join('');
+
+                    return `
+                        <div class="order-pipeline-card">
+                            <div class="order-pipeline-header">
+                                <div>
+                                    <strong style="font-size:1.05rem;">PO #${order.id} - ${order.medicineName}</strong>
+                                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+                                        Tracking: <code>${order.trackingCode || 'TRK-PENDING'}</code> | Supplier: <strong>${order.supplierName}</strong>
+                                    </div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span class="badge badge-info">${order.quantity} units (₹${(order.totalCost || 0).toFixed(2)})</span>
+                                    <button class="btn btn-sm btn-primary" onclick="advanceOrderStatus(${order.id})">
+                                        Advance Status <i class="ph ph-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="stepper-container">${stepperHTML}</div>
+                        </div>`;
+                }).join('');
+            }
+
+            // Completed Shipments Table
+            const tbodyDone = document.getElementById('completedOrdersTableBody');
+            const completed = allOrders.filter(o => o.status === 'Delivered');
+            if (!completed.length) {
+                tbodyDone.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:20px;">No delivered shipments on record yet.</td></tr>';
+            } else {
+                tbodyDone.innerHTML = completed.map(o => `
+                    <tr>
+                        <td style="color:var(--text-muted);">${o.orderDate}</td>
+                        <td><code>${o.trackingCode || 'N/A'}</code></td>
+                        <td style="font-weight:600;">${o.medicineName}</td>
+                        <td>${o.supplierName}</td>
+                        <td>${o.quantity} units</td>
+                        <td>₹${(o.totalCost || 0).toFixed(2)}</td>
+                        <td><span class="badge badge-success"><i class="ph ph-check"></i> Delivered</span></td>
+                    </tr>
+                `).join('');
+            }
+
+            // Authorized Suppliers Directory
+            const supCont = document.getElementById('suppliersContainer');
+            supCont.innerHTML = allSuppliers.map(s => `
+                <div style="border: 1px solid var(--border); border-radius: 8px; padding: 14px; background: var(--card-bg);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <strong style="font-size:0.95rem;">${s.name}</strong>
+                        <span class="badge ${s.status === 'Active' ? 'badge-success' : 'badge-warning'}">${s.status}</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Rep: ${s.contactPerson || 'General Desk'} | Lead Time: ${s.leadTimeDays || 3} Days | Rating: ★ ${s.rating || 4.5}</div>
+                    <div style="font-size:0.83rem; margin-top:6px; display:flex; gap:12px; color:var(--text-main);">
+                        <span><i class="ph ph-phone"></i> ${s.phone || 'N/A'}</span>
+                        <span><i class="ph ph-envelope"></i> ${s.email || 'N/A'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // RENDER: HOSPITALS & FACILITIES
+        // ==========================================
+        function renderHospitalsView() {
+            const list = document.getElementById('hospitalsList');
+            if (!allHospitals.length) {
+                list.innerHTML = '<p>No hospital facilities configured.</p>';
+                return;
+            }
+
+            list.innerHTML = allHospitals.map(h => {
+                const total = h.totalBeds || 60;
+                const free = h.availableBeds || 0;
+                const occ = total > 0 ? Math.round(((total - free) / total) * 100) : 0;
+                let badgeClass = 'badge-success';
+                if (h.status === 'Critical') badgeClass = 'badge-danger';
+                else if (h.status === 'Busy') badgeClass = 'badge-warning';
+
+                return `
+                    <div class="item-card">
+                        <div>
+                            <div class="card-top">
+                                <div>
+                                    <h3 class="item-name">${h.name}</h3>
+                                    <span style="font-size:0.82rem; color:var(--text-muted);"><i class="ph ph-map-pin"></i> ${h.location}</span>
+                                </div>
+                                <span class="badge ${badgeClass}">${h.status}</span>
+                            </div>
+
+                            <div class="stat-row">
+                                <span>Available Beds</span>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="stat-val">${free} / ${total}</span>
+                                    <div class="counter-btn-group">
+                                        <button class="btn-counter" onclick="adjustBeds(${h.id}, -1)" title="Admit Patient (-1 bed)">-</button>
+                                        <button class="btn-counter" onclick="adjustBeds(${h.id}, 1)" title="Discharge (+1 bed)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="progress-bar-bg" style="margin-bottom:12px;">
+                                <div class="progress-bar-fill" style="width:${occ}%;"></div>
+                            </div>
+
+                            <div class="stat-row">
+                                <span>Active Doctors On Duty</span>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="stat-val">${h.availableDoctors} MDs</span>
+                                    <div class="counter-btn-group">
+                                        <button class="btn-counter" onclick="adjustDocs(${h.id}, -1)" title="Off duty">-</button>
+                                        <button class="btn-counter" onclick="adjustDocs(${h.id}, 1)" title="On duty">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stat-row"><span>Dispatch Phone</span><span class="stat-val">${h.contactPhone || 'N/A'}</span></div>
+                        </div>
+
+                        <div class="card-footer-actions">
+                            <button class="btn btn-sm btn-primary" onclick="openModal('modalAdmitPatient'); document.getElementById('admitHospital').value = ${h.id};">
+                                <i class="ph ph-user-plus"></i> Admit to Facility
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="deleteHospital(${h.id})" title="Delete Facility">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        // ==========================================
+        // RENDER: AUDIT LOG
+        // ==========================================
+        function renderActivity(activities) {
+            const tbody = document.getElementById('activityTableBody');
+            if (!activities.length) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--text-muted);">No activity logs matched your search.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = activities.map(act => `
+                <tr>
+                    <td style="color:var(--text-muted); font-size:0.83rem;">${act.timestamp}</td>
+                    <td style="font-weight:600;">${act.username || act.user}</td>
+                    <td><span class="badge badge-info">${act.action}</span></td>
+                    <td>${act.details}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ==========================================
+        // RENDER: DYNAMIC REPORTS & CHARTS
+        // ==========================================
+        function renderReports(medicines) {
+            const an = analyticsData;
+            document.getElementById('report-inventory-val').textContent = `₹${(an.total_inventory_value || 0).toLocaleString()}`;
+            document.getElementById('report-burn-rate').textContent = `₹${(an.monthly_burn_rate || 0).toLocaleString()} / mo`;
+            document.getElementById('report-val-at-risk').textContent = `₹${(an.value_at_risk || 0).toLocaleString()}`;
+            document.getElementById('report-bed-rate').textContent = `${an.bed_occupancy_rate || 0}%`;
+            document.getElementById('report-bed-counts').textContent = `${an.total_occupied_beds || 0} occupied / ${an.total_network_beds || 0} total beds`;
+
+            // Detailed Table
+            const tbody = document.getElementById('reportTableBody');
+            if (!medicines.length) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:30px; color:var(--text-muted);">No inventory data available.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = medicines.map(med => {
+                const rem = med.dailyUsage > 0 ? Math.floor(med.stockQuantity / med.dailyUsage) : 0;
+                const price = med.unitPrice || 15.0;
+                const totVal = (med.stockQuantity * price).toFixed(2);
+                let badgeClass = 'badge-success'; let statusTxt = 'Optimal';
+                if (med.orderStatus === 'ordered') { badgeClass = 'badge-info'; statusTxt = 'In Transit'; }
+                else if (rem <= 3) { badgeClass = 'badge-danger'; statusTxt = 'Critically Low'; }
+
+                return `
+                    <tr>
+                        <td>#${med.id}</td>
+                        <td style="font-weight:600;">${med.name}</td>
+                        <td><span class="badge badge-info">${med.category || 'General'}</span></td>
+                        <td><code>${med.batchNumber || 'BAT-1001'}</code></td>
+                        <td>${med.supplier}</td>
+                        <td>${med.stockQuantity}</td>
+                        <td>${med.dailyUsage} / day</td>
+                        <td>₹${price.toFixed(2)}</td>
+                        <td>₹${totVal}</td>
+                        <td>${med.expirationDate}</td>
+                        <td><span class="badge ${badgeClass}">${statusTxt}</span></td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function renderReportCharts(analytics) {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? '#1e293b' : '#f1f5f9';
+
+            // 1. Monthly Usage Trend Chart
+            const ctxTrend = document.getElementById('usageTrendChart')?.getContext('2d');
+            if (ctxTrend) {
+                if (chartUsageTrend) chartUsageTrend.destroy();
+                const trend = analytics.usage_trend || { labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'], data: [320, 340, 310, 390, 360, 380] };
+                chartUsageTrend = new Chart(ctxTrend, {
+                    type: 'line',
+                    data: {
+                        labels: trend.labels,
+                        datasets: [{
+                            label: 'Monthly Units Administered',
+                            data: trend.data,
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.35,
+                            pointBackgroundColor: '#2563eb'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { color: gridColor }, ticks: { color: textColor } },
+                            y: { grid: { color: gridColor }, ticks: { color: textColor } }
+                        }
+                    }
+                });
+            }
+
+            // 2. Category Valuation Pie Chart
+            const ctxCat = document.getElementById('categoryDistributionChart')?.getContext('2d');
+            if (ctxCat) {
+                if (chartCategoryDist) chartCategoryDist.destroy();
+                const catSummary = analytics.category_summary || {};
+                const labels = Object.keys(catSummary);
+                const values = labels.map(k => catSummary[k].value);
+                const colors = ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
+
+                chartCategoryDist = new Chart(ctxCat, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels.length ? labels : ['General'],
+                        datasets: [{
+                            data: values.length ? values : [100],
+                            backgroundColor: colors.slice(0, labels.length || 1),
+                            borderWidth: 2,
+                            borderColor: isDark ? '#131b2e' : '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right', labels: { color: textColor, boxWidth: 12 } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function exportCSV() {
+            let csv = "ID,Medicine Name,Category,Batch Number,Supplier,Stock Quantity,Daily Usage,Unit Cost (₹),Total Value (₹),Expiration Date,Status\n";
+            allMedicines.forEach(m => {
+                const rem = m.dailyUsage > 0 ? Math.floor(m.stockQuantity / m.dailyUsage) : 0;
+                const status = m.orderStatus === 'ordered' ? 'In Transit' : (rem <= 3 ? 'Critically Low' : 'Optimal');
+                const price = m.unitPrice || 15.0;
+                const tot = (m.stockQuantity * price).toFixed(2);
+                csv += `${m.id},"${m.name}","${m.category || 'General'}","${m.batchNumber || ''}","${m.supplier}",${m.stockQuantity},${m.dailyUsage},${price},${tot},"${m.expirationDate}","${status}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", `Daymes_Inventory_Ledger_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ==========================================
+        // ACTION HANDLERS
+        // ==========================================
+
+        async function dispenseMed(id, name) {
+            try {
+                const res = await fetch(`${API_MEDS}/${id}/take`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ count: 1, reason: 'Ward Dispense' })
+                });
+                const updated = await res.json();
+                await fetchAllData();
+                if (updated.autoTriggeredJustNow) {
+                    showToast(`⚠️ Low stock for ${name}! Auto-reorder triggered with supplier.`, 'warning');
+                } else {
+                    showToast(`Dispensed 1 unit of ${name}. Remaining: ${updated.stockQuantity}`);
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function administerDose(rxId, patientName) {
+            try {
+                const res = await fetch(`${API_PRESCRIPTIONS}/${rxId}/administer`, { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok) {
+                    showToast(data.error || 'Administration failed.', 'danger');
+                    return;
+                }
+                await fetchAllData();
+                showToast(`Medication administered to ${patientName}.`);
+            } catch (err) { console.error(err); }
+        }
+
+        async function toggleRx(rxId) {
+            try {
+                const res = await fetch(`${API_PRESCRIPTIONS}/${rxId}/toggle`, { method: 'POST' });
+                await fetchAllData();
+                showToast(`Prescription status updated.`);
+            } catch (err) { console.error(err); }
+        }
+
+        async function dischargePatient(patientId, name) {
+            if (!confirm(`Discharge patient '${name}' from clinical care? This will discontinue their active inpatient prescriptions.`)) return;
+            try {
+                await fetch(`${API_PATIENTS}/${patientId}`, { method: 'DELETE' });
+                showToast(`Patient ${name} successfully discharged.`);
+                await fetchAllData();
+            } catch (err) { console.error(err); }
+        }
+
+        async function advanceOrderStatus(orderId) {
+            try {
+                const res = await fetch(`${API_ORDERS}/${orderId}/advance`, { method: 'POST' });
+                const data = await res.json();
+                await fetchAllData();
+                if (data.status === 'Delivered') {
+                    showToast(`Shipment received and added to physical inventory!`);
+                } else {
+                    showToast(`Order status updated to: ${data.status}`);
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function adjustBeds(hospId, delta) {
+            try {
+                await fetch(`${API_HOSPITALS}/${hospId}/adjust_beds`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ delta })
+                });
+                await fetchAllData();
+            } catch (err) { console.error(err); }
+        }
+
+        async function adjustDocs(hospId, delta) {
+            try {
+                await fetch(`${API_HOSPITALS}/${hospId}/adjust_doctors`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ delta })
+                });
+                await fetchAllData();
+            } catch (err) { console.error(err); }
+        }
+
+        function openEditModal(medId) {
+            const med = allMedicines.find(m => m.id === medId);
+            if (!med) return;
+            document.getElementById('editMedId').value = med.id;
+            document.getElementById('editMedName').value = med.name;
+            document.getElementById('editMedCategory').value = med.category || 'General';
+            document.getElementById('editMedBatch').value = med.batchNumber || '';
+            document.getElementById('editMedStock').value = med.stockQuantity;
+            document.getElementById('editMedUsage').value = med.dailyUsage;
+            document.getElementById('editMedPrice').value = med.unitPrice || 15.0;
+            document.getElementById('editMedExp').value = med.expirationDate;
+            document.getElementById('editMedSupplier').value = med.supplier;
+            openModal('modalEditMedicine');
+        }
+
+        function openReorderModal(medId) {
+            const med = allMedicines.find(m => m.id === medId);
+            if (!med) return;
+            document.getElementById('reorderMedId').value = med.id;
+            document.getElementById('reorderMedNameDesc').textContent = `Placing purchase order for ${med.name} (Current stock: ${med.stockQuantity} units).`;
+            document.getElementById('reorderSupplier').value = med.supplier;
+            openModal('modalReorder');
+        }
+
+        function openDisposeModal(medId) {
+            const med = allMedicines.find(m => m.id === medId);
+            if (!med) return;
+            document.getElementById('disposeMedId').value = med.id;
+            document.getElementById('disposeMedNameDesc').textContent = `Write off batch for ${med.name} (Lot: ${med.batchNumber || 'N/A'}, Expiry: ${med.expirationDate}).`;
+            document.getElementById('disposeQty').value = med.stockQuantity;
+            document.getElementById('disposeQty').max = med.stockQuantity;
+            openModal('modalDispose');
+        }
+
+        async function deleteMed(id) {
+            if (!confirm("Permanently delete this medicine from system inventory?")) return;
+            try {
+                await fetch(`${API_MEDS}/${id}`, { method: 'DELETE' });
+                showToast("Medicine deleted.");
+                await fetchAllData();
+            } catch (err) { console.error(err); }
+        }
+
+        async function deleteHospital(id) {
+            if (!confirm("Remove this hospital facility from regional directory?")) return;
+            try {
+                await fetch(`${API_HOSPITALS}/${id}`, { method: 'DELETE' });
+                showToast("Facility removed.");
+                await fetchAllData();
+            } catch (err) { console.error(err); }
+        }
+
+        // ==========================================
+        // FORM SUBMISSIONS
+        // ==========================================
+
+        document.getElementById('formAddMedicine').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('addMedName').value,
+                category: document.getElementById('addMedCategory').value,
+                batchNumber: document.getElementById('addMedBatch').value,
+                stockQuantity: parseInt(document.getElementById('addMedStock').value),
+                dailyUsage: parseInt(document.getElementById('addMedUsage').value),
+                unitPrice: parseFloat(document.getElementById('addMedPrice').value),
+                expirationDate: document.getElementById('addMedExp').value,
+                supplier: document.getElementById('addMedSupplier').value
+            };
+            try {
+                await fetch(API_MEDS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                closeModal('modalAddMedicine');
+                e.target.reset();
+                showToast(`Added ${payload.name} to central inventory.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formEditMedicine').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editMedId').value;
+            const payload = {
+                name: document.getElementById('editMedName').value,
+                category: document.getElementById('editMedCategory').value,
+                batchNumber: document.getElementById('editMedBatch').value,
+                stockQuantity: parseInt(document.getElementById('editMedStock').value),
+                dailyUsage: parseInt(document.getElementById('editMedUsage').value),
+                unitPrice: parseFloat(document.getElementById('editMedPrice').value),
+                expirationDate: document.getElementById('editMedExp').value,
+                supplier: document.getElementById('editMedSupplier').value
+            };
+            try {
+                await fetch(`${API_MEDS}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                closeModal('modalEditMedicine');
+                showToast(`Updated details for ${payload.name}.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formReorder').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('reorderMedId').value;
+            const payload = {
+                quantity: parseInt(document.getElementById('reorderQty').value),
+                days: parseInt(document.getElementById('reorderDays').value),
+                supplier: document.getElementById('reorderSupplier').value
+            };
+            try {
+                const res = await fetch(`${API_MEDS}/${id}/reorder`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const data = await res.json();
+                closeModal('modalReorder');
+                showToast(`Purchase order submitted! Tracking: ${data.trackingCode}`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formDispose').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('disposeMedId').value;
+            const payload = {
+                quantity: parseInt(document.getElementById('disposeQty').value),
+                reason: document.getElementById('disposeReason').value
+            };
+            try {
+                await fetch(`${API_MEDS}/${id}/dispose`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                closeModal('modalDispose');
+                showToast(`Disposed ${payload.quantity} units safely.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formAdmitPatient').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                fullName: document.getElementById('admitName').value,
+                age: parseInt(document.getElementById('admitAge').value),
+                gender: document.getElementById('admitGender').value,
+                hospitalId: parseInt(document.getElementById('admitHospital').value),
+                roomBed: document.getElementById('admitRoom').value,
+                condition: document.getElementById('admitCondition').value
+            };
+            try {
+                await fetch(API_PATIENTS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                closeModal('modalAdmitPatient');
+                e.target.reset();
+                showToast(`Admitted patient ${payload.fullName}.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formNewPrescription').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                patientId: parseInt(document.getElementById('rxPatientId').value),
+                medicineId: parseInt(document.getElementById('rxMedicineId').value),
+                dosage: document.getElementById('rxDosage').value,
+                frequency: document.getElementById('rxFrequency').value,
+                prescribedBy: document.getElementById('rxDoctor').value
+            };
+            try {
+                await fetch(API_PRESCRIPTIONS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                closeModal('modalNewPrescription');
+                e.target.reset();
+                showToast(`Prescription saved to clinical schedule.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formNewOrder').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                medicineId: parseInt(document.getElementById('poMedicineId').value),
+                supplierName: document.getElementById('poSupplierName').value,
+                quantity: parseInt(document.getElementById('poQuantity').value)
+            };
+            try {
+                const res = await fetch(API_ORDERS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const data = await res.json();
+                closeModal('modalNewOrder');
+                e.target.reset();
+                showToast(`PO #${data.id} dispatched to ${payload.supplierName}.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formAddSupplier').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('supName').value,
+                contactPerson: document.getElementById('supContact').value,
+                phone: document.getElementById('supPhone').value,
+                email: document.getElementById('supEmail').value,
+                leadTimeDays: parseInt(document.getElementById('supLeadTime').value)
+            };
+            try {
+                await fetch(API_SUPPLIERS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                closeModal('modalAddSupplier');
+                e.target.reset();
+                showToast(`Supplier ${payload.name} certified and added.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        document.getElementById('formAddHospital').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('hospName').value,
+                location: document.getElementById('hospLocation').value,
+                totalBeds: parseInt(document.getElementById('hospTotalBeds').value),
+                availableBeds: parseInt(document.getElementById('hospAvailBeds').value),
+                availableDoctors: parseInt(document.getElementById('hospDoctors').value),
+                contactPhone: document.getElementById('hospPhone').value
+            };
+            try {
+                await fetch(API_HOSPITALS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                closeModal('modalAddHospital');
+                e.target.reset();
+                showToast(`Facility ${payload.name} registered.`);
+                fetchAllData();
+            } catch (err) { console.error(err); }
+        });
+
+        // Search listeners
+        document.getElementById('searchInput')?.addEventListener('input', applyFilters);
+        document.getElementById('searchPatientsInput')?.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const filtered = allPatients.filter(p => p.fullName.toLowerCase().includes(q) || (p.condition && p.condition.toLowerCase().includes(q)) || (p.roomBed && p.roomBed.toLowerCase().includes(q)));
+            const grid = document.getElementById('patientCardsGrid');
+            if (!filtered.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1; padding:30px; text-align:center; color:var(--text-muted);">No patients found.</div>';
+                return;
+            }
+            grid.innerHTML = filtered.map(p => `
+                <div class="item-card">
+                    <div>
+                        <div class="card-top">
+                            <div><h3 class="item-name">${p.fullName}</h3><span class="badge badge-purple">${p.age}yo ${p.gender}</span></div>
+                            <span class="badge badge-success">${p.status}</span>
+                        </div>
+                        <div class="stat-row"><span>Room & Bed</span><span class="stat-val">${p.roomBed}</span></div>
+                        <div class="stat-row"><span>Facility</span><span class="stat-val">${p.hospitalName || 'Main Hospital'}</span></div>
+                        <div class="stat-row"><span>Diagnosis</span><span class="stat-val">${p.condition}</span></div>
+                    </div>
+                    <div class="card-footer-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="openModal('modalNewPrescription'); document.getElementById('rxPatientId').value = ${p.id};"><i class="ph ph-plus"></i> Prescribe</button>
+                        <button class="btn btn-sm btn-danger" onclick="dischargePatient(${p.id}, '${p.fullName}')">Discharge</button>
+                    </div>
+                </div>
+            `).join('');
+        });
+
+        document.getElementById('searchHospitals')?.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const filtered = allHospitals.filter(h => h.name.toLowerCase().includes(q) || h.location.toLowerCase().includes(q));
+            const list = document.getElementById('hospitalsList');
+            if (!filtered.length) {
+                list.innerHTML = '<p>No matching hospitals found.</p>';
+                return;
+            }
+            list.innerHTML = filtered.map(h => {
+                const total = h.totalBeds || 60;
+                const free = h.availableBeds || 0;
+                const occ = total > 0 ? Math.round(((total - free) / total) * 100) : 0;
+                return `
+                    <div class="item-card">
+                        <div>
+                            <div class="card-top">
+                                <div><h3 class="item-name">${h.name}</h3><span style="font-size:0.82rem; color:var(--text-muted);"><i class="ph ph-map-pin"></i> ${h.location}</span></div>
+                                <span class="badge badge-info">${h.status}</span>
+                            </div>
+                            <div class="stat-row"><span>Available Beds</span><span class="stat-val">${free} / ${total} (${occ}% occupied)</span></div>
+                            <div class="progress-bar-bg" style="margin-bottom:12px;"><div class="progress-bar-fill" style="width:${occ}%;"></div></div>
+                            <div class="stat-row"><span>Doctors On Duty</span><span class="stat-val">${h.availableDoctors} MDs</span></div>
+                        </div>
+                        <div class="card-footer-actions">
+                            <button class="btn btn-sm btn-primary" onclick="openModal('modalAdmitPatient'); document.getElementById('admitHospital').value = ${h.id};">Admit</button>
+                            <button class="btn btn-sm btn-secondary" onclick="deleteHospital(${h.id})"><i class="ph ph-trash"></i></button>
+                        </div>
+                    </div>`;
+            }).join('');
+        });
+
+        // ==========================================
+        // APP PROJECT PRESENTATION GUIDE WALKTHROUGH
+        // ==========================================
+        let currentTourStep = 0;
+        const tourSteps = [
+            {
+                step: 1,
+                title: "1. Problem Statement & Operational Dashboard",
+                badge: "Introduction & Overview",
+                talkingPoints: [
+                    "Hello Professor! Daymes Medicare is an enterprise hospital logistics and clinical inpatient system designed to solve healthcare supply shortages.",
+                    "Traditional hospitals suffer from severe blindspots: sudden medicine stockouts, expiring medication waste (₹ billions lost annually), and poor ICU/ward bed coordination across regional hospital networks.",
+                    "Our solution unites pharmaceutical inventory management, bedside dosage administration, multi-stage procurement pipelines, and bed capacity tracking in a unified portal."
+                ],
+                technicalNotes: "Full-Stack Single-Page Architecture, Dark/Light responsive theme, real-time KPI aggregations.",
+                actionLabel: "View Operational Dashboard",
+                actionFn: () => { closeModal('modalTeacherTour'); switchView('dashboard'); showToast("Navigated to Dashboard overview."); }
+            },
+            {
+                step: 2,
+                title: "2. Pharmaceutical Inventory & Expiration Tracking",
+                badge: "Inventory Management",
+                talkingPoints: [
+                    "Here is the Pharmaceutical Inventory module: each drug record tracks physical stock balances, unit valuations, batch numbers, and expiration dates.",
+                    "The system features interactive smart filters for Low Stock (≤3d), Expiring Soon (≤30d), Expired Batches, and In Transit shipments.",
+                    "Pharmacists can safely dispense units to wards, reorder from suppliers, or write off expired batches with audit traceability."
+                ],
+                technicalNotes: "Search indexing, category filtering, expiration differential calculation, batch tracking.",
+                actionLabel: "Inspect Live Inventory Stock",
+                actionFn: () => { closeModal('modalTeacherTour'); switchView('inventory'); showToast("Switched to Inventory Management."); }
+            },
+            {
+                step: 3,
+                title: "3. Automated Buffer & Reorder Algorithm",
+                badge: "Core APP Algorithm",
+                talkingPoints: [
+                    "Here is our core inventory algorithm: when medication is dispensed, the system computes the remaining clinical runway:",
+                    "Formula: RunwayDays = StockQuantity / DailyUsage.",
+                    "If RunwayDays ≤ 3 days, the engine automatically triggers an emergency purchase order to verified suppliers, calculates the delivery ETA, and alerts hospital pharmacists.",
+                    "Click the button below to run a live simulation that dispenses units and triggers the automated order!"
+                ],
+                technicalNotes: "Mathematical threshold trigger, ACID SQLite update, immediate activity log persistence.",
+                actionLabel: "⚡ Run Live Reorder Simulation",
+                actionFn: async () => {
+                    closeModal('modalTeacherTour');
+                    const targetMed = allMedicines.find(m => m.stockQuantity > 0) || allMedicines[0];
+                    if (targetMed) {
+                        showToast(`Simulating dispensing for ${targetMed.name}...`);
+                        await dispenseMed(targetMed.id, targetMed.name);
+                        switchView('orders');
+                        showToast(`PO pipeline updated! Notice incoming orders.`, 'warning');
+                    }
+                }
+            },
+            {
+                step: 4,
+                title: "4. Regional Hospital Network & Bed Capacity",
+                badge: "Facility Network",
+                talkingPoints: [
+                    "Our Hospital Network module tracks available beds, total capacities, and active doctors across facilities.",
+                    "Hospital administrators can adjust bed counts and staff shifts in real-time with shift counter controls (+ / -) to respond to emergency casualty surges.",
+                    "Automated occupancy percentage gauges provide instant capacity warnings (Normal, Busy, Critical)."
+                ],
+                technicalNotes: "Live bed occupancy calculation, counter delta API, shift staffing updates.",
+                actionLabel: "Inspect Facilities & Beds",
+                actionFn: () => { closeModal('modalTeacherTour'); switchView('hospitals'); showToast("Switched to Facilities Network."); }
+            },
+            {
+                step: 5,
+                title: "5. Inpatient Clinical Care & Bedside Administration",
+                badge: "Clinical Operations",
+                talkingPoints: [
+                    "Moving to Inpatient Clinical Operations: we track admitted patients, assigned room beds, and attending physician orders.",
+                    "When a ward nurse clicks 'Administer', the system automatically deducts 1 unit from central inventory, updates the patient chart, and logs the nurse timestamp.",
+                    "This eliminates medication double-dosing and paper charting errors."
+                ],
+                technicalNotes: "Foreign key relational constraints (Patients & Prescriptions), nurse timestamping, bed census counts.",
+                actionLabel: "Inspect Patients & Prescriptions",
+                actionFn: () => { closeModal('modalTeacherTour'); switchView('patients'); showToast("Displaying Active Clinical Prescriptions."); }
+            },
+            {
+                step: 6,
+                title: "6. Multi-Stage Logistics & Financial Analytics",
+                badge: "Supply Chain & Analytics",
+                talkingPoints: [
+                    "On the logistics side, every purchase order moves through a verifiable 4-stage tracking pipeline: Ordered → In Transit → Out for Delivery → Delivered.",
+                    "Once marked Delivered, inventory stock automatically increments with zero manual data entry.",
+                    "Finally, our Analytics module dynamically calculates total inventory valuation, monthly burn rates, and value at risk, with 1-click CSV audit ledger export."
+                ],
+                technicalNotes: "State machine transitions, Chart.js trends, client-side Blob CSV export.",
+                actionLabel: "Inspect Logistics & Analytics",
+                actionFn: () => { closeModal('modalTeacherTour'); switchView('reports'); showToast("Displaying Dynamic Reports & Ledger."); }
+            }
+        ];
+
+        function openTeacherTour() {
+            currentTourStep = 0;
+            renderTourStep();
+            openModal('modalTeacherTour');
+        }
+
+        function renderTourStep() {
+            const stepData = tourSteps[currentTourStep];
+            if (!stepData) return;
+
+            const pillsCont = document.getElementById('tourProgressPills');
+            pillsCont.innerHTML = tourSteps.map((s, idx) => {
+                let cls = 'tour-step-pill';
+                if (idx < currentTourStep) cls += ' completed';
+                else if (idx === currentTourStep) cls += ' active';
+                return `<div class="${cls}" title="Step ${s.step}"></div>`;
+            }).join('');
+
+            const card = document.getElementById('tourContentCard');
+            card.innerHTML = `
+                <div class="tour-badge">${stepData.badge} (Step ${stepData.step} of ${tourSteps.length})</div>
+                <h3 style="margin:0 0 12px 0; font-size:1.25rem; color:var(--text-main);">${stepData.title}</h3>
+                
+                <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:16px; margin-bottom:14px;">
+                    <strong style="color:var(--primary); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.04em;">Key Presentation Pitch:</strong>
+                    <ul style="margin:8px 0 0 0; padding-left:18px; color:var(--text-main); font-size:0.9rem; line-height:1.6;">
+                        ${stepData.talkingPoints.map(tp => `<li>${tp}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div style="font-size:0.83rem; color:var(--text-muted);">
+                    <i class="ph ph-gear"></i> <strong>APP Technical Concept:</strong> ${stepData.technicalNotes}
+                </div>
+            `;
+
+            document.getElementById('btnTourPrev').disabled = currentTourStep === 0;
+            document.getElementById('btnTourNext').textContent = currentTourStep === (tourSteps.length - 1) ? 'Finish Tour' : 'Next Step →';
+            document.getElementById('btnTourAction').innerHTML = `<i class="ph ph-arrow-square-out"></i> ${stepData.actionLabel}`;
+        }
+
+        function nextTourStep() {
+            if (currentTourStep < tourSteps.length - 1) {
+                currentTourStep++;
+                renderTourStep();
+            } else {
+                closeModal('modalTeacherTour');
+                showToast("APP Project walkthrough completed!");
+            }
+        }
+
+        function prevTourStep() {
+            if (currentTourStep > 0) {
+                currentTourStep--;
+                renderTourStep();
+            }
+        }
+
+        function runTourAction() {
+            const stepData = tourSteps[currentTourStep];
+            if (stepData && typeof stepData.actionFn === 'function') {
+                stepData.actionFn();
+            }
+        }
+
+        // Set default date for form
+        const defaultExpDate = new Date();
+        defaultExpDate.setFullYear(defaultExpDate.getFullYear() + 2);
+        document.getElementById('addMedExp').valueAsDate = defaultExpDate;
+
+        // Init App
+        initTheme();
+        fetchAllData();
+    </script>
+</body>
+</html>

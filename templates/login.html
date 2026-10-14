@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Daymes Medicare Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #0b0f19;
+            --card-bg: #131b2e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #232f48;
+            --danger-bg: rgba(239, 68, 68, 0.18);
+            --danger-text: #fca5a5;
+            --danger-border: #ef4444;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --primary: #2563eb;
+                --primary-hover: #1d4ed8;
+                --bg-color: #f1f5f9;
+                --card-bg: #ffffff;
+                --text-main: #0f172a;
+                --text-muted: #64748b;
+                --border: #e2e8f0;
+                --danger-bg: #fee2e2;
+                --danger-text: #991b1b;
+                --danger-border: #f87171;
+            }
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle glowing background circles */
+        .bg-glow {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .glow-1 { background: #2563eb; top: -100px; left: -100px; }
+        .glow-2 { background: #06b6d4; bottom: -100px; right: -100px; }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+            margin-bottom: 24px;
+        }
+
+        .error-message {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            border: 1px solid var(--danger-border);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 12px 11px 40px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 16px;
+            margin-top: 10px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="brand-header">
+                <div class="brand-logo"><i class="ph ph-heartbeat"></i></div>
+                <div>
+                    <h1>Daymes Medicare</h1>
+                    <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; font-weight:600;">Clinical & Supply Chain Portal</span>
+                </div>
+            </div>
+
+            <p class="subtitle">Enter your physician or staff credentials to proceed.</p>
+            
+            {% if error %}
+            <div class="error-message">
+                <i class="ph ph-warning-circle"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label for="username">Username / Staff ID</label>
+                    <div class="input-wrapper">
+                        <i class="ph ph-user"></i>
+                        <input type="text" id="username" name="username" placeholder="e.g. Dr. Jennifer Adams" required autofocus>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="ph ph-lock-key"></i>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit">
+                    <span>Sign In to Portal</span>
+                    <i class="ph ph-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="demo-credentials">
+                <span>Tip: Any username & password will grant clinical access for pair-testing.</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
